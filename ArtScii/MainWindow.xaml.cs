@@ -2,6 +2,9 @@
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+using ArtScii.Extensions;
+using System.Windows.Documents;
+using System.Drawing.Imaging;
 
 namespace ArtScii
 {
@@ -11,6 +14,10 @@ namespace ArtScii
     public partial class MainWindow : Window
     {
         private Bitmap originalBitmap = null;
+        private double numZoom = 0.5;
+        private int numPixelsToChar = 5;
+        private int numColors = 16;
+        private float numFontSize = 3;
 
         public MainWindow()
         {
@@ -24,61 +31,79 @@ namespace ArtScii
 
         private void btnOpenOriginal_Click(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Title = "Select an image file.";
-            ofd.Filter = "Png Images(*.png)|*.png|Jpeg Images(*.jpg)|*.jpg";
-            ofd.Filter += "|Bitmap Images(*.bmp)|*.bmp";
-
-            if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            using (OpenFileDialog ofd = new OpenFileDialog()
             {
-                StreamReader streamReader = new StreamReader(ofd.FileName);
-                originalBitmap = (Bitmap)Bitmap.FromStream(streamReader.BaseStream);
-                streamReader.Close();
+                Title = "Select an image file.",
+                Filter = "Png Images(*.png)|*.png|Jpeg Images(*.jpg)|*.jpg|Bitmap Images(*.bmp)|*.bmp"
+            })
+                if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    using (StreamReader streamReader = new StreamReader(ofd.FileName))
+                    {
+                        if (originalBitmap != null)
+                        {
+                            originalBitmap.Dispose();
+                        }
 
-                // What is the WPF equivalent? Hmmm...
-                //ApplyFilter();
+                        originalBitmap = (Bitmap)Bitmap.FromStream(streamReader.BaseStream);
+                    }
+
+                    ApplyFilter();
+                }
+        }
+
+        private void ApplyFilter()
+        {
+            if (originalBitmap != null)
+            {
+                txtAscii.Document.Blocks.Clear();
+
+                //originalBitmap.ScaleBitmap((float)(numZoom.Value / 100)).ASCIIFilter((int)numPixelsToChar.Value, (int)numColors.Value);
+                txtAscii.Document.Blocks.Add(new Block(originalBitmap.ScaleBitmap((float)(numZoom / 100)).ASCIIFilter(numPixelsToChar, numColors)));
             }
         }
 
         private void btnSaveNewImage_Click(object sender, RoutedEventArgs e)
         {
-            //if (string.IsNullOrEmpty(new TextRange(txtAscii.Document.ContentStart, txtAscii.Document.ContentEnd).Text))
-            //{
-            //    return;
-            //}
+            if (string.IsNullOrEmpty(new TextRange(txtAscii.Document.ContentStart, txtAscii.Document.ContentEnd).Text))
+            {
+                return;
+            }
 
-            //Font textFont = new System.Drawing.Font(txtAscii.Document.FontFamily.ToString(), (float)numFontSize.Value, txtAscii.Font.Style);
-            //Bitmap textBitmap = originalBitmap.ASCIIFilter((int)numPixelsToChar.Value).TextToImage(textFont, (float)(numZoom.Value / 100));
+            Font textFont = new Font(txtAscii.Document.FontFamily.ToString(), numFontSize, (GraphicsUnit)txtAscii.Document.FontSize);
+            using (Bitmap textBitmap = originalBitmap.ASCIIFilter((int)numPixelsToChar).TextToImage(textFont, (float)(numZoom / 100)))
+            {
+                if (textBitmap != null)
+                {
+                    using (SaveFileDialog sfd = new SaveFileDialog()
+                        {
+                            Title = "Specify a file name and file path",
+                            Filter = "Png Images(*.png)|*.png|Jpeg Images(*.jpg)|*.jpg|Bitmap Images(*.bmp)|*.bmp"
+                        })
+                    {
+                        if (sfd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                        {
+                            string fileExtension = Path.GetExtension(sfd.FileName).ToUpper();
+                            ImageFormat imgFormat = ImageFormat.Png;
 
-            //if (textBitmap != null)
-            //{
-            //    SaveFileDialog sfd = new SaveFileDialog();
-            //    sfd.Title = "Specify a file name and file path";
-            //    sfd.Filter = "Png Images(*.png)|*.png|Jpeg Images(*.jpg)|*.jpg";
-            //    sfd.Filter += "|Bitmap Images(*.bmp)|*.bmp";
+                            switch (fileExtension)
+                            {
+                                case "BMP":
+                                    imgFormat = ImageFormat.Bmp;
+                                    break;
+                                case "JPG":
+                                    imgFormat = ImageFormat.Jpeg;
+                                    break;
+                            }
 
-            //    if (sfd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-            //    {
-            //        string fileExtension = Path.GetExtension(sfd.FileName).ToUpper();
-            //        ImageFormat imgFormat = ImageFormat.Png;
-
-            //        if (fileExtension == "BMP")
-            //        {
-            //            imgFormat = ImageFormat.Bmp;
-            //        }
-            //        else if (fileExtension == "JPG")
-            //        {
-            //            imgFormat = ImageFormat.Jpeg;
-            //        }
-
-            //        StreamWriter streamWriter = new StreamWriter(sfd.FileName, false);
-            //        textBitmap.Save(streamWriter.BaseStream, imgFormat);
-            //        streamWriter.Flush();
-            //        streamWriter.Close();
-
-            //        textBitmap.Dispose();
-            //    }
-            //}
+                            using (StreamWriter streamWriter = new StreamWriter(sfd.FileName, false))
+                            {
+                                textBitmap.Save(streamWriter.BaseStream, imgFormat);
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }

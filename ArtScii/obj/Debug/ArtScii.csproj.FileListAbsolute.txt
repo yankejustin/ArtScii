@@ -13,3 +13,13 @@ C:\Users\jyanke\Desktop\ArtScii\ArtScii\obj\Debug\ArtScii.pdb
 C:\Users\jyanke\Documents\GitHub\ArtScii\ArtScii\bin\Debug\ArtScii.exe.config
 C:\Users\jyanke\Documents\GitHub\ArtScii\ArtScii\obj\Debug\ArtScii.exe
 C:\Users\jyanke\Documents\GitHub\ArtScii\ArtScii\obj\Debug\ArtScii.pdb
+C:\Users\jyanke\Documents\GitHub\ArtScii\ArtScii\bin\Debug\ArtScii.exe
+C:\Users\jyanke\Documents\GitHub\ArtScii\ArtScii\bin\Debug\ArtScii.pdb
+C:\Users\jyanke\Documents\GitHub\ArtScii\ArtScii\obj\Debug\ArtScii.csprojResolveAssemblyReference.cache
+C:\Users\jyanke\Documents\GitHub\ArtScii\ArtScii\obj\Debug\MainWindow.baml
+C:\Users\jyanke\Documents\GitHub\ArtScii\ArtScii\obj\Debug\MainWindow.g.cs
+C:\Users\jyanke\Documents\GitHub\ArtScii\ArtScii\obj\Debug\App.g.cs
+C:\Users\jyanke\Documents\GitHub\ArtScii\ArtScii\obj\Debug\ArtScii_MarkupCompile.cache
+C:\Users\jyanke\Documents\GitHub\ArtScii\ArtScii\obj\Debug\ArtScii.g.resources
+C:\Users\jyanke\Documents\GitHub\ArtScii\ArtScii\obj\Debug\ArtScii.Properties.Resources.resources
+C:\Users\jyanke\Documents\GitHub\ArtScii\ArtScii\obj\Debug\ArtScii.csproj.GenerateResource.Cache
