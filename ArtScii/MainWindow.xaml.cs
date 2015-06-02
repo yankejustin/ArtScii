@@ -14,7 +14,7 @@ namespace ArtScii
     public partial class MainWindow : Window
     {
         private Bitmap originalBitmap = null;
-        private double numZoom = 0.5;
+        private double numZoom = 1d;
         private int numPixelsToChar = 5;
         private int numColors = 16;
         private float numFontSize = 3;
@@ -59,7 +59,7 @@ namespace ArtScii
                 txtAscii.Document.Blocks.Clear();
 
                 //originalBitmap.ScaleBitmap((float)(numZoom.Value / 100)).ASCIIFilter((int)numPixelsToChar.Value, (int)numColors.Value);
-                txtAscii.Document.Blocks.Add(new Block(originalBitmap.ScaleBitmap((float)(numZoom / 100)).ASCIIFilter(numPixelsToChar, numColors)));
+                txtAscii.AppendText(originalBitmap.ScaleBitmap((float)numZoom).ASCIIFilter(numPixelsToChar, numColors));
             }
         }
 
@@ -70,8 +70,8 @@ namespace ArtScii
                 return;
             }
 
-            Font textFont = new Font(txtAscii.Document.FontFamily.ToString(), numFontSize, (GraphicsUnit)txtAscii.Document.FontSize);
-            using (Bitmap textBitmap = originalBitmap.ASCIIFilter((int)numPixelsToChar).TextToImage(textFont, (float)(numZoom / 100)))
+            Font textFont = new Font(txtAscii.Document.FontFamily.ToString(), numFontSize, GraphicsUnit.Pixel);
+            using (Bitmap textBitmap = originalBitmap.ASCIIFilter((int)numPixelsToChar).ToImage(textFont, (float)(numZoom / 100)))
             {
                 if (textBitmap != null)
                 {

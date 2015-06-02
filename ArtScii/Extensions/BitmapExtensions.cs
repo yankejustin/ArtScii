@@ -10,13 +10,10 @@ namespace ArtScii.Extensions
 {
     public static class BitmapExtensions
     {
-        public static string ASCIIFilter(this Bitmap sourceBitmap, int pixelBlockSize,
-                                                                   int colorCount = 0)
+        public static string ASCIIFilter(this Bitmap sourceBitmap, int pixelBlockSize, int colorCount = 0)
         {
-            BitmapData sourceData = sourceBitmap.LockBits(new Rectangle(0, 0,
-                                    sourceBitmap.Width, sourceBitmap.Height),
-                                                      ImageLockMode.ReadOnly,
-                                                PixelFormat.Format32bppArgb);
+            BitmapData sourceData = sourceBitmap.LockBits(new Rectangle(0, 0, sourceBitmap.Width, sourceBitmap.Height),
+                                                          ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
 
             byte[] pixelBuffer = new byte[sourceData.Stride * sourceData.Height];
 
@@ -88,23 +85,19 @@ namespace ArtScii.Extensions
 
                 if (stringBuilder.ToString().IndexOf(charValue) != -1)
                 {
-                    charValue = (char)(Math.Floor((byte)charValue *
-                                            randomChar.NextDouble()));
+                    charValue = (char)(Math.Floor((byte)charValue * randomChar.NextDouble()));
                 }
 
-                if (Char.IsControl(charValue) == false &&
-                    Char.IsPunctuation(charValue) == false &&
+                if (!Char.IsControl(charValue) && !Char.IsPunctuation(charValue) &&
                     stringBuilder.ToString().IndexOf(charValue) == -1)
                 {
                     stringBuilder.Append(charValue);
 
-                    randomChar = new Random((int)((byte)charValue *
-                                     (k + 1) + DateTime.Now.Ticks));
+                    randomChar = new Random((int)((byte)charValue * (k + 1) + DateTime.Now.Ticks));
                 }
                 else
                 {
-                    randomChar = new Random((int)((byte)charValue *
-                                     (k + 1) + DateTime.UtcNow.Ticks));
+                    randomChar = new Random((int)((byte)charValue * (k + 1) + DateTime.UtcNow.Ticks));
                     k -= 1;
                 }
             }
@@ -130,7 +123,7 @@ namespace ArtScii.Extensions
         {
             Bitmap resultBitmap = new Bitmap((int)(sourceBitmap.Width * factor),
                                              (int)(sourceBitmap.Height * factor),
-                                             PixelFormat.Format32bppArgb);
+                                             sourceBitmap.PixelFormat);
 
             Graphics graphics = Graphics.FromImage(resultBitmap);
 
@@ -139,10 +132,8 @@ namespace ArtScii.Extensions
             graphics.SmoothingMode = SmoothingMode.HighQuality;
             graphics.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
 
-            graphics.DrawImage(sourceBitmap,
-                new Rectangle(0, 0, resultBitmap.Width, resultBitmap.Height),
-                new Rectangle(0, 0, sourceBitmap.Width, sourceBitmap.Height),
-                                                         GraphicsUnit.Pixel);
+            graphics.DrawImage(sourceBitmap, new Rectangle(0, 0, resultBitmap.Width, resultBitmap.Height),
+                               new Rectangle(0, 0, sourceBitmap.Width, sourceBitmap.Height), GraphicsUnit.Pixel);
 
             return resultBitmap;
         }

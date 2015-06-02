@@ -23,3 +23,17 @@ C:\Users\jyanke\Documents\GitHub\ArtScii\ArtScii\obj\Debug\ArtScii_MarkupCompile
 C:\Users\jyanke\Documents\GitHub\ArtScii\ArtScii\obj\Debug\ArtScii.g.resources
 C:\Users\jyanke\Documents\GitHub\ArtScii\ArtScii\obj\Debug\ArtScii.Properties.Resources.resources
 C:\Users\jyanke\Documents\GitHub\ArtScii\ArtScii\obj\Debug\ArtScii.csproj.GenerateResource.Cache
+C:\Users\Steve\Documents\GitHub\ArtScii\ArtScii.exe.config
+C:\Users\Steve\Documents\GitHub\ArtScii\Bin\ArtScii.exe.config
+C:\Users\Steve\Documents\GitHub\ArtScii\Bin\Debug\ArtScii.exe.config
+C:\Users\Steve\Documents\GitHub\ArtScii\Bin\Debug\ArtScii.exe
+C:\Users\Steve\Documents\GitHub\ArtScii\Bin\Debug\ArtScii.pdb
+C:\Users\Steve\Documents\GitHub\ArtScii\ArtScii\obj\Debug\MainWindow.baml
+C:\Users\Steve\Documents\GitHub\ArtScii\ArtScii\obj\Debug\MainWindow.g.cs
+C:\Users\Steve\Documents\GitHub\ArtScii\ArtScii\obj\Debug\App.g.cs
+C:\Users\Steve\Documents\GitHub\ArtScii\ArtScii\obj\Debug\ArtScii_MarkupCompile.cache
+C:\Users\Steve\Documents\GitHub\ArtScii\ArtScii\obj\Debug\ArtScii.g.resources
+C:\Users\Steve\Documents\GitHub\ArtScii\ArtScii\obj\Debug\ArtScii.Properties.Resources.resources
+C:\Users\Steve\Documents\GitHub\ArtScii\ArtScii\obj\Debug\ArtScii.csproj.GenerateResource.Cache
+C:\Users\Steve\Documents\GitHub\ArtScii\ArtScii\obj\Debug\ArtScii.exe
+C:\Users\Steve\Documents\GitHub\ArtScii\ArtScii\obj\Debug\ArtScii.pdb

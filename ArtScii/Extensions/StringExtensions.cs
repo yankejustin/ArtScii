@@ -29,8 +29,7 @@ namespace ArtScii.Extensions
             return new string(charArray);
         }
 
-        public static Bitmap TextToImage(this string text, Font font,
-                                                        float factor)
+        public static Bitmap ToImage(this string text, Font font, float factor)
         {
             Bitmap textBitmap = new Bitmap(1, 1);
 
