@@ -1,108 +1,82 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
-using ArtScii.Extensions;
-using System.Windows.Documents;
 using System.Drawing.Imaging;
 
 namespace ArtScii
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         private Bitmap originalBitmap = null;
-        private double numZoom = 1d;
-        private int numPixelsToChar = 5;
-        private int numColors = 16;
-        private float numFontSize = 3;
 
         public MainWindow()
         {
             InitializeComponent();
+
+            txtAscii.Clear();
         }
 
         private void btnCopyToClipboard_Click(object sender, RoutedEventArgs e)
         {
-            txtAscii.Paste();
+            System.Windows.Forms.Clipboard.SetText(txtAscii.Text);
         }
 
         private void btnOpenOriginal_Click(object sender, RoutedEventArgs e)
         {
-            using (OpenFileDialog ofd = new OpenFileDialog()
+            try
             {
-                Title = "Select an image file.",
-                Filter = "Png Images(*.png)|*.png|Jpeg Images(*.jpg)|*.jpg|Bitmap Images(*.bmp)|*.bmp"
-            })
-                if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                txtAscii.Clear();
+
+                using (OpenFileDialog ofd = new OpenFileDialog()
                 {
-                    using (StreamReader streamReader = new StreamReader(ofd.FileName))
+                    Title = "Select an image file.",
+                    Filter = "Png Images(*.png)|*.png|Jpeg Images(*.jpg)|*.jpg|Bitmap Images(*.bmp)|*.bmp"
+                })
+                    if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                     {
-                        if (originalBitmap != null)
+                        using (StreamReader streamReader = new StreamReader(ofd.FileName))
                         {
-                            originalBitmap.Dispose();
+                            if (originalBitmap != null)
+                            {
+                                originalBitmap.Dispose();
+                            }
+
+                            originalBitmap = (Bitmap)Bitmap.FromStream(streamReader.BaseStream);
                         }
 
-                        originalBitmap = (Bitmap)Bitmap.FromStream(streamReader.BaseStream);
+                        // Set the output textbox text to the text representation of the image.
+                        txtAscii.Text = AsciiHelpers.ASCIIConverter.GrayscaleImageToASCII(originalBitmap);
                     }
-
-                    ApplyFilter();
-                }
-        }
-
-        private void ApplyFilter()
-        {
-            if (originalBitmap != null)
+            }
+            catch (Exception ex)
             {
-                txtAscii.Document.Blocks.Clear();
-
-                //originalBitmap.ScaleBitmap((float)(numZoom.Value / 100)).ASCIIFilter((int)numPixelsToChar.Value, (int)numColors.Value);
-                txtAscii.AppendText(originalBitmap.ScaleBitmap((float)numZoom).ASCIIFilter(numPixelsToChar, numColors));
+                System.Windows.Forms.MessageBox.Show("Unable to open the image: " + ex.Message, "Error", MessageBoxButtons.OK);
             }
         }
 
         private void btnSaveNewImage_Click(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrEmpty(new TextRange(txtAscii.Document.ContentStart, txtAscii.Document.ContentEnd).Text))
+            try
             {
-                return;
-            }
-
-            Font textFont = new Font(txtAscii.Document.FontFamily.ToString(), numFontSize, GraphicsUnit.Pixel);
-            using (Bitmap textBitmap = originalBitmap.ASCIIFilter((int)numPixelsToChar).ToImage(textFont, (float)(numZoom / 100)))
-            {
-                if (textBitmap != null)
+                using (SaveFileDialog sfd = new SaveFileDialog()
                 {
-                    using (SaveFileDialog sfd = new SaveFileDialog()
-                        {
-                            Title = "Specify a file name and file path",
-                            Filter = "Png Images(*.png)|*.png|Jpeg Images(*.jpg)|*.jpg|Bitmap Images(*.bmp)|*.bmp"
-                        })
+                    Title = "Specify a file name and file path",
+                    Filter = "Text File(*.txt)|*.txt"
+                })
+                {
+                    if (sfd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                     {
-                        if (sfd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                        {
-                            string fileExtension = Path.GetExtension(sfd.FileName).ToUpper();
-                            ImageFormat imgFormat = ImageFormat.Png;
+                        File.WriteAllText(sfd.FileName, txtAscii.Text);
 
-                            switch (fileExtension)
-                            {
-                                case "BMP":
-                                    imgFormat = ImageFormat.Bmp;
-                                    break;
-                                case "JPG":
-                                    imgFormat = ImageFormat.Jpeg;
-                                    break;
-                            }
-
-                            using (StreamWriter streamWriter = new StreamWriter(sfd.FileName, false))
-                            {
-                                textBitmap.Save(streamWriter.BaseStream, imgFormat);
-                            }
-                        }
+                        System.Windows.Forms.MessageBox.Show("Saved!", "Success", MessageBoxButtons.OK);
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show("Unable to save contents to a file: " + ex.Message, "Error", MessageBoxButtons.OK);
             }
         }
     }
